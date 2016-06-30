@@ -3,9 +3,18 @@ cmake_minimum_required(VERSION 3.5.2)
 project(pod_cast VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
+
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-find_package(Qt5QuickControls2 CONFIG)
+if(IOS OR ANDROID)
+  find_package(Qt5 5.7.0 COMPONENTS WebView QuickControls2 CONFIG)
+elseif(WIN32)
+  find_package(Qt5 5.7.0 REQUIRED COMPONENTS Svg Widgets WebView QuickControls2 CONFIG)
+else()
+  find_package(Qt5 5.7.0 REQUIRED COMPONENTS Widgets WebView QuickControls2 CONFIG)
+endif()
+
+find_package(feed_parser REQUIRED CONFIG)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   message("-- Setting clang options")
@@ -14,9 +23,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -Wno-return-type-c-linkage -Wno-unneeded-internal-declaration")
   set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
-  set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
+  set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-strict-aliasing")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fno-strict-aliasing")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   message("-- Setting gcc options")
 
@@ -24,7 +33,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
   set(LD_FLAGS "${LD_FLAGS} -Wl,-z,defs")
 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-strict-aliasing")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fno-strict-aliasing")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   message("-- Setting msvc options")
   set(WARNINGS)

@@ -1,7 +1,11 @@
 <RCC>
-    <qresource prefix="/">
-        <file alias="main.qml">src/qml/main.qml</file>
-        <file alias="Page1.qml">src/qml/Page1.qml</file>
-        <file alias="Page1Form.qml">src/qml/Page1Form.ui.qml</file>
-    </qresource>
+  <qresource prefix="/">
+    <file alias="main.qml">src/qml/main.qml</file>
+    <file alias="Page1.qml">src/qml/Page1.qml</file>
+    <file alias="Page1Form.qml">src/qml/Page1Form.ui.qml</file>
+  </qresource>
+  <qresource prefix="/images">
+    <file alias="pod_cast.svg">res/images/pod_cast.svg</file>
+    <file alias="pod_cast.png">res/images/pod_cast.png</file>
+  </qresource>
 </RCC>
