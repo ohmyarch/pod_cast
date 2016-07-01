@@ -20,19 +20,25 @@
 **
 ****************************************************************************/
 
-#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #if defined(Q_OS_UNIX) || defined(Q_OS_WIN)
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <memory>
+#include <QApplication>
+#else
+#include <QGuiApplication>
 #endif
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
+#if defined(Q_OS_UNIX) || defined(Q_OS_WIN)
+    QApplication app(argc, argv);
+#else
     QGuiApplication app(argc, argv);
+#endif
 
 #if defined(Q_OS_WIN)
     QQuickStyle::setStyle("Universal");

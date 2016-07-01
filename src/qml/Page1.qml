@@ -19,14 +19,13 @@
 ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-
 import QtQuick 2.7
 
 Page1Form {
     button1.onClicked: {
-        console.log("Button 1 clicked.");
+        console.log("Button 1 clicked.")
     }
     button2.onClicked: {
-        console.log("Button 2 clicked.");
+        console.log("Button 2 clicked.")
     }
 }

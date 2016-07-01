@@ -6,6 +6,8 @@ set(CMAKE_AUTOMOC ON)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
+option(AUTO_REFORMAT_QML_FILES "Reformat all qml files at build time." ON)
+
 if(IOS OR ANDROID)
   find_package(Qt5 5.7.0 COMPONENTS WebView QuickControls2 CONFIG)
 elseif(WIN32)
@@ -16,6 +18,16 @@ endif()
 
 find_package(feed_parser REQUIRED CONFIG)
 
+if(AUTO_REFORMAT_QML_FILES)
+  file(GLOB_RECURSE QML_FILES qml/*)
+
+  add_custom_target(reformat_qml_files)
+
+  foreach(QML_FILE ${QML_FILES})
+    add_custom_command(TARGET reformat_qml_files COMMAND qmlfmt -w ${QML_FILE})
+  endforeach()
+endif()
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   message("-- Setting clang options")
 
@@ -23,9 +35,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -Wno-return-type-c-linkage -Wno-unneeded-internal-declaration")
   set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
-  set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
+  set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fno-strict-aliasing")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-strict-aliasing")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   message("-- Setting gcc options")
 
@@ -33,7 +45,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
   set(LD_FLAGS "${LD_FLAGS} -Wl,-z,defs")
 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fno-strict-aliasing")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-strict-aliasing")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   message("-- Setting msvc options")
   set(WARNINGS)
