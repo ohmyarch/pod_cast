@@ -20,39 +20,43 @@
 **
 ****************************************************************************/
 import QtQuick 2.7
+import QtQuick.Window 2.2
+import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.0
+import QtQuick.Controls.Material 2.0
 
 ApplicationWindow {
+    id: mainWindow
+    title: qsTr("pod_cast")
     visible: true
-    width: 640
-    height: 480
-    title: qsTr("Hello World")
+    visibility: Window.Maximized
 
-    SwipeView {
-        id: swipeView
-        anchors.fill: parent
-        currentIndex: tabBar.currentIndex
+    header: ToolBar {
+        Material.foreground: "white"
 
-        Page1 {
-        }
+        RowLayout {
+            // spacing: 20
+            anchors.fill: parent
 
-        Page {
-            Label {
-                text: qsTr("Second page")
-                anchors.centerIn: parent
+            ToolButton {
+                contentItem: Image {
+                    fillMode: Image.Pad
+                    horizontalAlignment: Image.AlignHCenter
+                    verticalAlignment: Image.AlignVCenter
+                    source: "qrc:/images/drawer.svg"
+                }
+                // onClicked: drawer.open()
             }
-        }
-    }
 
-    footer: TabBar {
-        id: tabBar
-        currentIndex: swipeView.currentIndex
-        TabButton {
-            text: qsTr("First")
-        }
-        TabButton {
-            text: qsTr("Second")
+            Label {
+                id: titleLabel
+                text: qsTr("Subscriptions")
+                font.pointSize: 16
+                // elide: Label.ElideRight
+                horizontalAlignment: Qt.AlignHCenter
+                verticalAlignment: Qt.AlignVCenter
+                // Layout.fillWidth: true
+            }
         }
     }
 }

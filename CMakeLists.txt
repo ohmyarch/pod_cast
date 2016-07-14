@@ -6,7 +6,7 @@ set(CMAKE_AUTOMOC ON)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-option(AUTO_REFORMAT_QML_FILES "Reformat all qml files at build time." ON)
+option(AUTO_REFORMAT_QML_FILES "Reformat all qml files at build time." OFF)
 
 if(IOS OR ANDROID)
   find_package(Qt5 5.7.0 COMPONENTS WebView QuickControls2 CONFIG)

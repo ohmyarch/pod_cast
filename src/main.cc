@@ -40,6 +40,9 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 #endif
 
+    app.setApplicationVersion(QStringLiteral("0.1.0"));
+    app.setWindowIcon(QIcon(QStringLiteral(":/images/pod_cast.svg")));
+
 #if defined(Q_OS_WIN)
     QQuickStyle::setStyle("Universal");
 #else
