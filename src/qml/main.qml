@@ -35,28 +35,44 @@ ApplicationWindow {
         Material.foreground: "white"
 
         RowLayout {
-            // spacing: 20
+            spacing: 20 // FIXME
             anchors.fill: parent
 
             ToolButton {
                 contentItem: Image {
-                    fillMode: Image.Pad
+                    sourceSize.height: titleLabel.height
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
                     source: "qrc:/images/drawer.svg"
                 }
-                // onClicked: drawer.open()
+
+                onClicked: drawer.open()
             }
 
             Label {
                 id: titleLabel
                 text: qsTr("Subscriptions")
                 font.pointSize: 16
-                // elide: Label.ElideRight
+                elide: Label.ElideRight
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
-                // Layout.fillWidth: true
+                Layout.fillWidth: true
+            }
+
+            ToolButton {
+                contentItem: Image {
+                    sourceSize.height: titleLabel.height
+                    horizontalAlignment: Image.AlignHCenter
+                    verticalAlignment: Image.AlignVCenter
+                    source: "qrc:/images/menu.svg"
+                }
             }
         }
+    }
+
+    Drawer {
+        id: drawer
+        width: Math.min(mainWindow.width, mainWindow.height) / 3 * 1
+        height: mainWindow.height
     }
 }

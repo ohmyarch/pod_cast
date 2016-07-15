@@ -6,5 +6,6 @@
         <file alias="pod_cast.svg">res/images/pod_cast.svg</file>
         <file alias="pod_cast.png">res/images/pod_cast.png</file>
         <file alias="drawer.svg">res/images/drawer.svg</file>
+        <file alias="menu.svg">res/images/menu.svg</file>
     </qresource>
 </RCC>
