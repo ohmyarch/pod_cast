@@ -23,12 +23,10 @@
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #if defined(Q_OS_UNIX) || defined(Q_OS_WIN)
+#include <QApplication>
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <memory>
-#include <QApplication>
-#else
-#include <QGuiApplication>
 #endif
 
 int main(int argc, char *argv[]) {
@@ -41,6 +39,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     app.setApplicationVersion(QStringLiteral("0.1.0"));
+    app.setOrganizationName(QStringLiteral("ohmyarch"));
     app.setWindowIcon(QIcon(QStringLiteral(":/images/pod_cast.svg")));
 
 #if defined(Q_OS_WIN)

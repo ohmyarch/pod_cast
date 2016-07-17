@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.5.2)
 
 project(pod_cast VERSION 0.1.0 LANGUAGES CXX)
 
-set(CMAKE_AUTOMOC ON)
-
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 option(AUTO_REFORMAT_QML_FILES "Reformat all qml files at build time." OFF)
@@ -38,6 +36,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-strict-aliasing")
+
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lc++abi")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   message("-- Setting gcc options")
 
@@ -56,5 +56,7 @@ endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_subdirectory(src)

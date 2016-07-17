@@ -45,7 +45,6 @@ ApplicationWindow {
                     verticalAlignment: Image.AlignVCenter
                     source: "qrc:/images/drawer.svg"
                 }
-
                 onClicked: drawer.open()
             }
 
@@ -66,6 +65,23 @@ ApplicationWindow {
                     verticalAlignment: Image.AlignVCenter
                     source: "qrc:/images/menu.svg"
                 }
+                onClicked: optionsMenu.open()
+
+                Menu {
+                    id: optionsMenu
+                    font.pointSize: 11
+
+                    MenuItem {
+                        text: qsTr("Add Podcast")
+                        onTriggered: {
+                            addPodcastPopup.open()
+                            addPodcastPopup.forceActiveFocus()
+                            podcastUrlField.clear()
+                            podcastUrlField.paste()
+                            podcastUrlField.ensureVisible(0)
+                        }
+                    }
+                }
             }
         }
     }
@@ -74,5 +90,46 @@ ApplicationWindow {
         id: drawer
         width: Math.min(mainWindow.width, mainWindow.height) / 3 * 1
         height: mainWindow.height
+    }
+
+    Popup {
+        id: addPodcastPopup
+        x: (mainWindow.width - width) / 2
+        y: (mainWindow.height - height) / 2
+        modal: true
+        font.pointSize: 16
+
+        contentItem: ColumnLayout {
+            id: addPodcastColumn
+            spacing: 20 // FIXME
+
+            RowLayout {
+                spacing: 10 // FIXME
+
+                Label {
+                    text: qsTr("URL: ")
+                }
+
+                TextField {
+                    id: podcastUrlField
+                    focus: true
+                    Layout.minimumWidth: Math.min(mainWindow.width,
+                                                  mainWindow.height) / 3 * 2
+                }
+            }
+
+            Button {
+                id: okButton
+                text: "Ok"
+                onClicked: addPodcastPopup.close()
+
+                Material.foreground: Material.primary
+                Material.background: "transparent"
+                Material.elevation: 0
+
+                Layout.preferredWidth: 0
+                Layout.fillWidth: true
+            }
+        }
     }
 }
