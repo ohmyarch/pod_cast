@@ -32,6 +32,7 @@ ApplicationWindow {
     visibility: Window.Maximized
 
     header: ToolBar {
+        id: toolBar
         Material.foreground: "white"
 
         RowLayout {
@@ -121,7 +122,11 @@ ApplicationWindow {
             Button {
                 id: okButton
                 text: "Ok"
-                onClicked: addPodcastPopup.close()
+                onClicked: {
+                    if (!podcastModel.addPodcast(podcastUrlField.text))
+                        console.log("Error!")
+                    addPodcastPopup.close()
+                }
 
                 Material.foreground: Material.primary
                 Material.background: "transparent"
@@ -130,6 +135,17 @@ ApplicationWindow {
                 Layout.preferredWidth: 0
                 Layout.fillWidth: true
             }
+        }
+    }
+
+    GridView {
+        anchors.top: toolBar.bottom
+        width: parent.width
+        height: parent.height - toolBar.height
+        model: podcastModel
+        delegate: Text {
+            font.pointSize: 16
+            text: title
         }
     }
 }

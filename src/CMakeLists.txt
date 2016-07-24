@@ -1,15 +1,21 @@
 qt5_add_resources(QRC_FILE ../pod_cast.qrc)
 
+qt5_wrap_cpp(PODCAST_MODEL_MOC ../include/PodcastModel.h)
+
 if(WIN32)
   add_executable(pod_cast
     WIN32
     main.cc
+    PodcastModel.cc
     ../pod_cast.rc
+    ${PODCAST_MODEL_MOC}
     ${QRC_FILE}
   )
 else()
   add_executable(pod_cast
     main.cc
+    PodcastModel.cc
+    ${PODCAST_MODEL_MOC}
     ${QRC_FILE}
   )
 endif()

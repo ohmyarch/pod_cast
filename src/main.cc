@@ -21,6 +21,7 @@
 ****************************************************************************/
 
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include <QQuickStyle>
 #if defined(Q_OS_UNIX) || defined(Q_OS_WIN)
 #include <QApplication>
@@ -28,6 +29,7 @@
 #include <QSystemTrayIcon>
 #include <memory>
 #endif
+#include "PodcastModel.h"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -48,7 +50,10 @@ int main(int argc, char *argv[]) {
     QQuickStyle::setStyle("Material");
 #endif
 
+    PodcastModel podcast_model;
+
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("podcastModel", &podcast_model);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
 #if defined(Q_OS_UNIX) || defined(Q_OS_WIN)
@@ -61,10 +66,10 @@ int main(int argc, char *argv[]) {
 
     QObject::connect(quit_action, &QAction::triggered, &QCoreApplication::quit);
 
-    QSystemTrayIcon *trayIcon = new QSystemTrayIcon(
+    QSystemTrayIcon *tray_icon = new QSystemTrayIcon(
         QIcon(QStringLiteral(":/images/pod_cast.png")), root);
-    trayIcon->setContextMenu(tray_icon_menu.get());
-    trayIcon->show();
+    tray_icon->setContextMenu(tray_icon_menu.get());
+    tray_icon->show();
 #endif
 
     return app.exec();
