@@ -31,6 +31,8 @@
 #endif
 #include "PodcastModel.h"
 
+Q_DECLARE_METATYPE(feed::rss::rss_data);
+
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
@@ -39,6 +41,8 @@ int main(int argc, char *argv[]) {
 #else
     QGuiApplication app(argc, argv);
 #endif
+
+    qRegisterMetaType<feed::rss::rss_data>();
 
     app.setApplicationVersion(QStringLiteral("0.1.0"));
     app.setOrganizationName(QStringLiteral("ohmyarch"));

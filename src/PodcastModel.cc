@@ -43,18 +43,27 @@ QVariant PodcastModel::data(const QModelIndex &index, int role) const {
     return QVariant();
 }
 
-bool PodcastModel::addPodcast(const QString &url) {
-    feed::utility::xml xml;
+void PodcastModel::addPodcast(const QString &url) {
+    threads_.emplace_back(std::thread([this, &url] {
+        feed::utility::xml xml;
 
-    const auto xml_str = xml.to_string(url.toLocal8Bit().constData());
-    if (!xml_str)
-        return false;
+        const auto xml_str = xml.to_string(url.toLocal8Bit().constData());
+        if (xml_str) {
+            auto data = feed::rss::parse_rss(xml_str.value());
+            if (data)
+                emit insertRow(data.value());
+            else
+                emit addFailure("fucker");
+        } else {
+            emit addFailure("fucker");
+        }
+    }));
+}
 
-    auto data = feed::rss::parse_rss(xml_str.value());
-    if (!data)
-        return false;
-
-    data_.emplace_back(std::move(data.value()));
-
-    return true;
+void PodcastModel::onInsertRow(feed::rss::rss_data data) {
+    const std::size_t data_size = data_.size();
+    beginInsertRows(QModelIndex(), data_size, data_size);
+    data_.emplace_back(std::move(data));
+    endInsertRows();
+    emit addSuccess();
 }

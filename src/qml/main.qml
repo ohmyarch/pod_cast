@@ -123,9 +123,8 @@ ApplicationWindow {
                 id: okButton
                 text: "Ok"
                 onClicked: {
-                    if (!podcastModel.addPodcast(podcastUrlField.text))
-                        console.log("Error!")
                     addPodcastPopup.close()
+                    podcastModel.addPodcast(podcastUrlField.text)
                 }
 
                 Material.foreground: Material.primary
@@ -147,5 +146,10 @@ ApplicationWindow {
             font.pointSize: 16
             text: title
         }
+    }
+
+    Connections {
+        target: podcastModel
+        onAddSuccess: console.log("fuck")
     }
 }

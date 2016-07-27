@@ -26,6 +26,7 @@
 #include <QString>
 #include <feed/rss_parser.h>
 #include <feed/utilities.h>
+#include <thread>
 #include <vector>
 
 class PodcastModel : public QAbstractListModel {
@@ -34,8 +35,14 @@ class PodcastModel : public QAbstractListModel {
   public:
     enum PodcastRoles { TitleRole = Qt::UserRole + 1, ImageRole };
 
-    explicit PodcastModel(QObject *parent = nullptr) {}
-    ~PodcastModel() {}
+    explicit PodcastModel(QObject *parent = nullptr) {
+        connect(this, &PodcastModel::insertRow, this,
+                &PodcastModel::onInsertRow); // Block?
+    }
+    ~PodcastModel() {
+        for (std::thread &thread : threads_)
+            thread.join();
+    }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override {
         Q_UNUSED(parent);
@@ -46,11 +53,19 @@ class PodcastModel : public QAbstractListModel {
     QVariant data(const QModelIndex &index,
                   int role = Qt::DisplayRole) const override;
 
-    Q_INVOKABLE bool addPodcast(const QString &url);
+    Q_INVOKABLE void addPodcast(const QString &url);
+
+    void onInsertRow(feed::rss::rss_data data);
 
   protected:
     QHash<int, QByteArray> roleNames() const override;
 
   private:
+    std::vector<std::thread> threads_;
     std::vector<feed::rss::rss_data> data_;
+
+  signals:
+    void insertRow(feed::rss::rss_data data);
+    void addSuccess();
+    void addFailure(QString errorMessage);
 };
