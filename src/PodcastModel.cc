@@ -22,6 +22,11 @@
 
 #include "PodcastModel.h"
 
+Podcast::Podcast(const feed::rss::rss_data &data)
+    : title_(data.title().c_str()) {
+
+    }
+
 QHash<int, QByteArray> PodcastModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[TitleRole] = "title";
@@ -33,10 +38,10 @@ QHash<int, QByteArray> PodcastModel::roleNames() const {
 QVariant PodcastModel::data(const QModelIndex &index, int role) const {
     int row = index.row();
 
-    if (row >= 0 && row < data_.size()) {
+    if (row >= 0 && row < podcasts_.size()) {
         switch (role) {
         case TitleRole:
-            return QString(data_[row].title().c_str());
+            return podcasts_[row].title();
         }
     }
 
@@ -50,20 +55,24 @@ void PodcastModel::addPodcast(const QString &url) {
         const auto xml_str = xml.to_string(url.toLocal8Bit().constData());
         if (xml_str) {
             auto data = feed::rss::parse_rss(xml_str.value());
-            if (data)
-                emit insertRow(data.value());
-            else
-                emit addFailure("fucker");
+            if (data) {
+                if (data->itunes())
+                    emit insertRow(Podcast(data.value()));
+                else
+                    emit addFailure("not podcast.");
+            } else {
+                emit addFailure("not feed.");
+            }
         } else {
-            emit addFailure("fucker");
+            emit addFailure("not rss.");
         }
     }));
 }
 
-void PodcastModel::onInsertRow(feed::rss::rss_data data) {
-    const std::size_t data_size = data_.size();
-    beginInsertRows(QModelIndex(), data_size, data_size);
-    data_.emplace_back(std::move(data));
+void PodcastModel::onInsertRow(Podcast podcast) {
+    const int podcasts_size = podcasts_.size();
+    beginInsertRows(QModelIndex(), podcasts_size, podcasts_size);
+    podcasts_.append(std::move(podcast));
     endInsertRows();
     emit addSuccess();
 }

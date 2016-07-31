@@ -29,6 +29,24 @@
 #include <thread>
 #include <vector>
 
+class Podcast {
+    // Q_GADGET
+    // Q_PROPERTY(QString title READ title)
+
+  public:
+    Podcast() {}
+    Podcast(const feed::rss::rss_data &data);
+    Podcast(const Podcast &other) : title_(other.title_) {}
+    Podcast(Podcast &&other) noexcept : title_(std::move(other.title_)) {}
+
+    const QString &title() const { return title_; }
+
+  private:
+    QString title_;
+};
+
+// Q_DECLARE_METATYPE(Podcast)
+
 class PodcastModel : public QAbstractListModel {
     Q_OBJECT
 
@@ -36,6 +54,8 @@ class PodcastModel : public QAbstractListModel {
     enum PodcastRoles { TitleRole = Qt::UserRole + 1, ImageRole };
 
     explicit PodcastModel(QObject *parent = nullptr) {
+        Q_UNUSED(parent);
+
         connect(this, &PodcastModel::insertRow, this,
                 &PodcastModel::onInsertRow); // Block?
     }
@@ -47,7 +67,7 @@ class PodcastModel : public QAbstractListModel {
     int rowCount(const QModelIndex &parent = QModelIndex()) const override {
         Q_UNUSED(parent);
 
-        return data_.size();
+        return podcasts_.size();
     }
 
     QVariant data(const QModelIndex &index,
@@ -55,17 +75,17 @@ class PodcastModel : public QAbstractListModel {
 
     Q_INVOKABLE void addPodcast(const QString &url);
 
-    void onInsertRow(feed::rss::rss_data data);
+    void onInsertRow(Podcast podcast);
 
   protected:
     QHash<int, QByteArray> roleNames() const override;
 
   private:
     std::vector<std::thread> threads_;
-    std::vector<feed::rss::rss_data> data_;
+    QVector<Podcast> podcasts_;
 
   signals:
-    void insertRow(feed::rss::rss_data data);
+    void insertRow(Podcast podcast);
     void addSuccess();
     void addFailure(QString errorMessage);
 };

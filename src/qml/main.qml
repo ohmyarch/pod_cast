@@ -137,14 +137,33 @@ ApplicationWindow {
         }
     }
 
-    GridView {
-        anchors.top: toolBar.bottom
-        width: parent.width
-        height: parent.height - toolBar.height
-        model: podcastModel
-        delegate: Text {
-            font.pointSize: 16
-            text: title
+    StackView {
+        id: stackView
+        anchors.fill: parent
+
+        initialItem: Pane {
+            id: pane
+
+            GridView {
+                anchors.fill: parent
+                model: podcastModel
+
+                delegate: Pane {
+                    ColumnLayout {
+                        anchors.fill: parent
+
+                        Text {
+                            font.pointSize: 16
+                            text: title
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: console.log("fucker")
+                        }
+                    }
+                }
+            }
         }
     }
 
